@@ -27,4 +27,6 @@ public class Constants {
     public static final String CONTENT_IS_BLANK = "exception.system.content-is-blank";
     public static final String CONTENT_MUST_NOT_BE_NULL = "exception.system.content-must-not-be-null";
 
+    public static final String TOKEN_IS_INVALID = "Invalid token!";
+
 }
