@@ -1,4 +1,8 @@
 package com.hcmute.ecommerce.universeshop.product;
 
-public class ProductService {
+public interface ProductService {
+    public ProductEntity createProduct(CreateProductRequest productRequest);
+
+    public String deleteProduct(Long productId);
+
 }

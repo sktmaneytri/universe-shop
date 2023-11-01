@@ -28,10 +28,9 @@ public class UserEntity {
     private String mobile;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<AddressEntity> addresses = new ArrayList<>();
-//    @Embedded
-//    @ElementCollection
-//    @CollectionTable(name = "payment_information", joinColumns = @JoinColumn(name = "user_id"))
-//    private List<PaymentInformationEntity> paymentInformation = new ArrayList<>();
+    @Embedded
+    @CollectionTable(name = "payment_information", joinColumns = @JoinColumn(name = "user_id"))
+    private List<PaymentInformationEntity> paymentInformation = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore

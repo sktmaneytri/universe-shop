@@ -28,5 +28,6 @@ public class Constants {
     public static final String CONTENT_MUST_NOT_BE_NULL = "exception.system.content-must-not-be-null";
 
     public static final String TOKEN_IS_INVALID = "Invalid token!";
+    public static final String USERNAME_IS_INVALID = "Invalid username!";
 
 }
