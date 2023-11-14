@@ -6,9 +6,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
-@Entity
 @Embeddable
-@Table(name = "payment_information")
+@Entity(name = "payment_information")
 public class PaymentInformationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

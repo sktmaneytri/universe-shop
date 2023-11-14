@@ -1,68 +1,48 @@
 package com.hcmute.ecommerce.universeshop.product;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hcmute.ecommerce.universeshop.Category.CategoryEntity;
-import com.hcmute.ecommerce.universeshop.review.RatingEntity;
-import com.hcmute.ecommerce.universeshop.review.ReviewEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
-@Entity
-@Table(name = "product")
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "product")
 public class ProductEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "title")
-    private String title;
+    @NotNull
+    @Size(min = 3, max = 30, message = "Product name size should be between 3-30")
+    private String productName;
 
-    @Column(name = "description")
+    @NotNull
+    @DecimalMin(value = "0.00")
+    private Double price;
+    @NotNull
     private String description;
 
-    @Column(name = "price")
-    private int price;
+    @NotNull
+    private String manufacturer;
 
-    @Column(name = "discounted_price")
-    private int discountPrice;
+    @NotNull
+    @Min(value = 0)
+    private Integer quantity;
 
-    @Column(name = "discount_percent")
-    private int discountPercent;
+    private String image;
 
-    @Column(name = "quantity")
-    private int quantity;
-    @Column(name = "brand")
-    private String brand;
-
-    private String color;
-//    @Embedded
-//    @ElementCollection
-//    @Column(name = "sizes")
-//    private Set<SizeEntity> sizes = new HashSet<>();
-
-    @Column(name = "images_url")
-    private String imageUrl;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<RatingEntity> ratings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<ReviewEntity> reviews = new ArrayList<>();
-
-    @Column(name = "num_ratings")
-    private int numRatings;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties({"products"})
     private CategoryEntity category;
-
-    private LocalDateTime createdAt;
-
-
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 }

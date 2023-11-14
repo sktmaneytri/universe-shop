@@ -27,7 +27,11 @@ public class Constants {
     public static final String CONTENT_IS_BLANK = "exception.system.content-is-blank";
     public static final String CONTENT_MUST_NOT_BE_NULL = "exception.system.content-must-not-be-null";
 
-    public static final String TOKEN_IS_INVALID = "Invalid token!";
-    public static final String USERNAME_IS_INVALID = "Invalid username!";
+//    public static final String TOKEN_IS_INVALID = "Invalid token!";
+//    public static final String USERNAME_IS_INVALID = "Invalid username!";
+ public static final String PRODUCT_NAME_EXISTED = "exception.security.product-name-existed";
+    public static final String CATEGORY_NOT_FOUND = "exception.security.category-not-found";
+    public static final String CART_NOT_FOUND = "exception.security.cart-not-found";
+    public static final String CATEGORY_NAME_EXISTED = "exception.security.category-name-existed";
 
 }

@@ -1,7 +1,6 @@
 package com.hcmute.ecommerce.universeshop.base.Authentication;
 
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 @NoArgsConstructor
 @AllArgsConstructor
