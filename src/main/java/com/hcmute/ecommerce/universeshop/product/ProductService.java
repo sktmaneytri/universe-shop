@@ -28,7 +28,7 @@ public interface ProductService {
     ProductEntity createProduct(ProductEntity productEntity);
 
     // Update an existing product
-    ProductDto updateProduct(Long productId, ProductDto productDto);
+    ProductDto updateProduct(Long productId, ProductEntity productEntity);
 
     // Delete a product by ID
     void deleteProductById(Long productId);

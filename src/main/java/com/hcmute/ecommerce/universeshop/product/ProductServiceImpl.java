@@ -91,8 +91,21 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDto updateProduct(Long productId, ProductDto productDto) {
-        return null;
+    public ProductDto updateProduct(Long productId,ProductEntity productEntity) {
+       ProductEntity productEntityUpdated = productRepository.findById(productId)
+               .orElseThrow(() -> new InputValidationException(errorMessage.getMessage(Constants.PRODUCT_NOT_FOUND)));
+       if(!productEntity.equals(productEntityUpdated) && isExistedProductName(productEntity.getProductName())) {
+           throw new InputValidationException(errorMessage.getMessage(Constants.PRODUCT_NAME_EXISTED));
+       }
+       productEntityUpdated.setProductName(productEntity.getProductName());
+       productEntityUpdated.setImage(productEntityUpdated.getImage());
+       productEntityUpdated.setCategory(productEntity.getCategory());
+       productEntityUpdated.setPrice(productEntity.getPrice());
+       productEntityUpdated.setDescription(productEntity.getDescription());
+       productEntityUpdated.setManufacturer(productEntity.getManufacturer());
+       productEntityUpdated.setQuantity(productEntity.getQuantity());
+
+       return productMapper.entityToDto(productRepository.save(productEntityUpdated));
     }
 
     @Override
