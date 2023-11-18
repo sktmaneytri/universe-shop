@@ -1,7 +1,5 @@
-package com.hcmute.ecommerce.universeshop.Category;
+package com.hcmute.ecommerce.universeshop.category;
 
-import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

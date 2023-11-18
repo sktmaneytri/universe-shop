@@ -1,7 +1,6 @@
 package com.hcmute.ecommerce.universeshop.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hcmute.ecommerce.universeshop.cart.Item.CartItemEntity;
 import com.hcmute.ecommerce.universeshop.customer.CustomerEntity;
 import com.hcmute.ecommerce.universeshop.customer.address.AddressEntity;
 import lombok.*;

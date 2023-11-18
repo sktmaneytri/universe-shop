@@ -1,4 +1,4 @@
-package com.hcmute.ecommerce.universeshop.Category;
+package com.hcmute.ecommerce.universeshop.category;
 
 import java.util.List;
 

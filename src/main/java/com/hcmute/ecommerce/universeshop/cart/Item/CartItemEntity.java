@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+
 @Data
 @Entity(name = "cart_item")
 @NoArgsConstructor
@@ -16,8 +18,8 @@ public class CartItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_detail_id")
     private Long id;
+    @Min(value = 0)
     private int quantity;
-    private double totalPrice;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private CartEntity cart;

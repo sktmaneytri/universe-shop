@@ -1,7 +1,7 @@
 package com.hcmute.ecommerce.universeshop.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.hcmute.ecommerce.universeshop.Category.CategoryEntity;
+import com.hcmute.ecommerce.universeshop.category.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,11 @@ public class ProductDto {
     private String productName;
     @NotNull
     @DecimalMin(value = "0.00")
-    private Double price;
+    private Double actualPrice;
+
+    @NotNull
+    @DecimalMin(value = "0.00")
+    private Double discountedPrice;
     private String description;
     @NotNull
     private String manufacturer;

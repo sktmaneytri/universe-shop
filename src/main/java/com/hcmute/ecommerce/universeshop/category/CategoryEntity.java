@@ -1,4 +1,4 @@
-package com.hcmute.ecommerce.universeshop.Category;
+package com.hcmute.ecommerce.universeshop.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;

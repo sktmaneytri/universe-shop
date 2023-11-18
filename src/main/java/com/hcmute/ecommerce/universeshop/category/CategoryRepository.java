@@ -1,4 +1,4 @@
-package com.hcmute.ecommerce.universeshop.Category;
+package com.hcmute.ecommerce.universeshop.category;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

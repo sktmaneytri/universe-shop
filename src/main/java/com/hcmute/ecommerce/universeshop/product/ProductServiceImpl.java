@@ -1,7 +1,7 @@
 package com.hcmute.ecommerce.universeshop.product;
 
-import com.hcmute.ecommerce.universeshop.Category.CategoryEntity;
-import com.hcmute.ecommerce.universeshop.Category.CategoryRepository;
+import com.hcmute.ecommerce.universeshop.category.CategoryEntity;
+import com.hcmute.ecommerce.universeshop.category.CategoryRepository;
 import com.hcmute.ecommerce.universeshop.base.exception.Constants;
 import com.hcmute.ecommerce.universeshop.base.exception.ErrorMessage;
 import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException;
@@ -100,7 +100,8 @@ public class ProductServiceImpl implements ProductService{
        productEntityUpdated.setProductName(productEntity.getProductName());
        productEntityUpdated.setImage(productEntityUpdated.getImage());
        productEntityUpdated.setCategory(productEntity.getCategory());
-       productEntityUpdated.setPrice(productEntity.getPrice());
+       productEntityUpdated.setActualPrice(productEntity.getActualPrice());
+       productEntityUpdated.setDiscountedPrice(productEntity.getActualPrice());
        productEntityUpdated.setDescription(productEntity.getDescription());
        productEntityUpdated.setManufacturer(productEntity.getManufacturer());
        productEntityUpdated.setQuantity(productEntity.getQuantity());
@@ -120,13 +121,15 @@ public class ProductServiceImpl implements ProductService{
     private Boolean isNull(ProductEntity productEntity) {
         return isNullOrEmpty(productEntity.getProductName()) ||
                 isNullOrEmpty(productEntity.getDescription()) ||
-                productEntity.getPrice() < 0 ||
+                productEntity.getActualPrice() < 0 ||
+                productEntity.getDiscountedPrice() < 0 ||
                 productEntity.getQuantity() < 0;
     }
     private Boolean isNull(ProductDto productEntity) {
         return isNullOrEmpty(productEntity.getProductName()) ||
                 isNullOrEmpty(productEntity.getDescription()) ||
-                productEntity.getPrice() < 0 ||
+                productEntity.getActualPrice() < 0 ||
+                productEntity.getDiscountedPrice() < 0 ||
                 productEntity.getQuantity() < 0;
     }
     private Boolean isExistedProductName(String productName) {
