@@ -1,35 +1,23 @@
 package com.hcmute.ecommerce.universeshop.product;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public interface ProductService {
-    // Retrieve all products
-    List<ProductDto> getAllProducts();
+    public ProductEntity createProduct(CreateProductRequest productRequest);
 
-    // Retrieve product by ID
-    ProductDto getProductById(Long productId);
+    public String deleteProduct(Long productId) throws ProductException;
 
-    // Retrieve product by name
-    ProductDto getProductByName(String productName);
+    public ProductEntity updateProduct(Long productId, ProductEntity productRequest)
+            throws ProductException;
 
-    // Retrieve products by manufacturer
-    List<ProductDto> getProductsByManufacturer(String manufacturer);
+    public ProductEntity findProductById(Long id) throws ProductException;
 
-    // Retrieve products that are sold out
-    List<ProductDto> getSoldOutProducts();
+    public List<ProductEntity> findProductByCategory(String category);
 
-    // Retrieve products by category name
-    List<ProductDto> getProductsByCategoryName(String categoryName);
+    public Page<ProductEntity> getAllProduct(String category, List<String> colors, List<String> sizes,
+                                             Integer minPrice, Integer maxPrice, Integer minDiscount,
+                                             String sort, String stock, Integer pageNumber, Integer pageSize);
 
-    // Retrieve products with quantity below a certain threshold
-    List<ProductDto> getProductsByQuantityBelowThreshold(int quantityThreshold);
-
-    // Create a new product
-    ProductEntity createProduct(ProductEntity productEntity);
-
-    // Update an existing product
-    ProductDto updateProduct(Long productId, ProductEntity productEntity);
-
-    // Delete a product by ID
-    void deleteProductById(Long productId);
 }

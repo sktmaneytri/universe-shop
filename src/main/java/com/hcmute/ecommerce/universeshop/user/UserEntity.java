@@ -1,32 +1,45 @@
 package com.hcmute.ecommerce.universeshop.user;
 
-import com.hcmute.ecommerce.universeshop.role.RoleEntity;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hcmute.ecommerce.universeshop.payment.PaymentInformationEntity;
+import com.hcmute.ecommerce.universeshop.review.RatingEntity;
+import com.hcmute.ecommerce.universeshop.review.ReviewEntity;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 @Data
-@Entity(name = "users")
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "user")
 public class UserEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private String userName;
-    private String userFirstName;
-    private String userPassword;
-    private String userLastName;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLE",
-    joinColumns = {
-            @JoinColumn(name = "USER_ID")
-    },
-            inverseJoinColumns = {
-            @JoinColumn(name = "ROLE_ID")
-            }
-    )
-    private Set<RoleEntity> roles;
+    private Long id;
+
+    private String firstName;
+    private String LastName;
+
+    private String email;
+    private String password;
+    private String role;
+    private String mobile;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<AddressEntity> addresses = new ArrayList<>();
+    @Embedded
+    @CollectionTable(name = "payment_information", joinColumns = @JoinColumn(name = "user_id"))
+    private List<PaymentInformationEntity> paymentInformation = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<RatingEntity> ratings = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ReviewEntity> reviews = new ArrayList<>();
+
+    private LocalDateTime createdAt;
+
 }

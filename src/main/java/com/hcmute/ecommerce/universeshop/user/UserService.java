@@ -1,11 +1,12 @@
 package com.hcmute.ecommerce.universeshop.user;
 
-import java.util.List;
+import org.springframework.security.core.userdetails.User;
 
 public interface UserService {
-    UserEntity registerNewUser(UserEntity user);
+    public UserEntity findUserById(Long userId);
+    public UserEntity findUserProfileByJwt(String jwt);
 
-    void initRolesAndUser();
-    List<UserEntity> getUserEntities();
-    UserEntity getUserByUserName(String userName);
+    public User loadUserByUsername(String username);
+
+
 }
