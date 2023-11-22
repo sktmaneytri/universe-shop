@@ -1,5 +1,7 @@
 package com.hcmute.ecommerce.universeshop.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hcmute.ecommerce.universeshop.cart.CartEntity;
 import com.hcmute.ecommerce.universeshop.role.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,4 +31,7 @@ public class UserEntity {
             }
     )
     private Set<RoleEntity> roles;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private CartEntity cart;
 }

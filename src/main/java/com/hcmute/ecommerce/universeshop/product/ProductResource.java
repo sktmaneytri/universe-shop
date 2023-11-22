@@ -1,12 +1,21 @@
 package com.hcmute.ecommerce.universeshop.product;
 
+import com.hcmute.ecommerce.universeshop.category.CategoryService;
+import com.hcmute.ecommerce.universeshop.image.ImageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -15,14 +24,25 @@ public class ProductResource {
 
     private final ProductService productService;
 
+    private final CategoryService categoryService;
+
     @Autowired
-    public ProductResource(ProductService productService) {
+    public ProductResource(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
+    }
+    @PostConstruct
+    public void initCategoriesAndProducts() {
+        categoryService.initCategories();
+        productService.initProducts();
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
-        List<ProductDto> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "9") int limit,
+                                                           @RequestParam String searchKey) {
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        List<ProductDto> products = productService.getAllProducts(pageRequest, searchKey);
         return ResponseEntity.ok(products);
     }
 
@@ -56,11 +76,33 @@ public class ProductResource {
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping
-    public ResponseEntity<ProductEntity> createProduct(@RequestBody ProductEntity productEntity) {
-        ProductEntity createdProduct = productService.createProduct(productEntity);
-        URI uri = URI.create("/api/v1/products/" + createdProduct.getId());
-        return ResponseEntity.created(uri).body(createdProduct);
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ProductEntity> createProduct(@RequestPart("product") ProductEntity productEntity,
+                                                       @RequestPart("imageFile")MultipartFile[] files) {
+
+        try {
+            Set<ImageEntity> images = uploadImage(files);
+            productEntity.setProductImages(images);
+
+            ProductEntity createdProduct = productService.createProduct(productEntity);
+            URI uri = URI.create("/api/v1/products/" + createdProduct.getId());
+            return ResponseEntity.created(uri).body(createdProduct);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    public Set<ImageEntity> uploadImage(MultipartFile[] multipartFiles) throws IOException {
+        Set<ImageEntity> imageEntities = new HashSet<>();
+        for(MultipartFile file : multipartFiles) {
+            ImageEntity imageEntity = new ImageEntity(
+              file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getBytes()
+            );
+            imageEntities.add(imageEntity);
+        }
+        return imageEntities;
     }
 
     @PutMapping("/{productId}")

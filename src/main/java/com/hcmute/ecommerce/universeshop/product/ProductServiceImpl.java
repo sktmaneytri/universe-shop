@@ -7,9 +7,13 @@ import com.hcmute.ecommerce.universeshop.base.exception.ErrorMessage;
 import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException;
 import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 @Service
 @Transactional
@@ -28,8 +32,131 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
-        return productMapper.entitiesToDtos(productRepository.findAll());
+    public void initProducts() {
+        ProductEntity product1 = ProductEntity.builder()
+                .productName("UNIVERSE Spooky Tee")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(200000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(1L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product2 = ProductEntity.builder()
+                .productName("UNIVERSE Book Boxy Tee")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(400000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(1L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product3 = ProductEntity.builder()
+                .productName("UNIVERSE Season 3 Tee")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(600000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(1L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product4 = ProductEntity.builder()
+                .productName("UNIVERSE ChillTimes Tee")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(100000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(1L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product7 = ProductEntity.builder()
+                .productName("UNIVERSE Jadon Jackets")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(250000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(3L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product5 = ProductEntity.builder()
+                .productName("UNIVERSE HHow Jackets")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(203000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(3L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product6 = ProductEntity.builder()
+                .productName("UNIVERSE Yasser Hoodie")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(230000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(5L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product8 = ProductEntity.builder()
+                .productName("UNIVERSE Jadon Hoodie")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(400000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(5L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product9 = ProductEntity.builder()
+                .productName("UNIVERSE Jadon SoMi")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(240000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(2L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+        ProductEntity product10 = ProductEntity.builder()
+                .productName("UNIVERSE Msson Somi")
+                .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
+                .actualPrice(Double.valueOf(202000))
+                .discountedPrice(Double.valueOf(0))
+                .quantity(1000)
+                .manufacturer("UNIVERSE FACTORY")
+                .category(categoryRepository.findById(2L).get())
+                .status(ProductStatus.AVAILABLE)
+                .build();
+
+        List<ProductEntity> productEntities = Arrays.asList(product1, product2, product3, product4, product5, product6, product7, product8, product9, product10);
+        productRepository.saveAll(productEntities);
+    }
+
+    @Override
+    public List<ProductDto> getAllProducts(Pageable pageable, String searchKey) {
+        if(searchKey.equals("")) {
+            List<ProductEntity> productEntities = productRepository.findAll(pageable).getContent();
+            List<ProductDto> productDtoList = productMapper.entitiesToDtos(productEntities);
+            if(productDtoList.isEmpty()) {
+                return productDtoList;
+            }
+            return sortProduct(productDtoList, Comparator.comparing(ProductDto::getId));
+        } else {
+            List<ProductEntity> productEntities = productRepository.findProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(
+                    searchKey, searchKey, pageable
+            );
+            List<ProductDto> productDtoList = productMapper.entitiesToDtos(productEntities);
+            if(productDtoList.isEmpty()) {
+                return productDtoList;
+            }
+            return sortProduct(productDtoList, Comparator.comparing(ProductDto::getId));
+        }
     }
 
     @Override
@@ -98,7 +225,7 @@ public class ProductServiceImpl implements ProductService{
            throw new InputValidationException(errorMessage.getMessage(Constants.PRODUCT_NAME_EXISTED));
        }
        productEntityUpdated.setProductName(productEntity.getProductName());
-       productEntityUpdated.setImage(productEntityUpdated.getImage());
+//       productEntityUpdated.setImage(productEntityUpdated.getImage());
        productEntityUpdated.setCategory(productEntity.getCategory());
        productEntityUpdated.setActualPrice(productEntity.getActualPrice());
        productEntityUpdated.setDiscountedPrice(productEntity.getActualPrice());
@@ -140,5 +267,11 @@ public class ProductServiceImpl implements ProductService{
     }
     private Boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    public List<ProductDto> sortProduct(List<ProductDto> productDtoList, Comparator<ProductDto> comparator) {
+        List<ProductDto> sortedProduct = new ArrayList<>(productDtoList);
+        sortedProduct.sort(comparator);
+        return sortedProduct;
     }
 }

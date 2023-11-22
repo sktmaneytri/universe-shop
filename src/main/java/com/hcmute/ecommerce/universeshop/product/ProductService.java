@@ -1,10 +1,13 @@
 package com.hcmute.ecommerce.universeshop.product;
 
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface ProductService {
     // Retrieve all products
-    List<ProductDto> getAllProducts();
+    void initProducts();
+    List<ProductDto> getAllProducts(Pageable pageable, String key);
 
     // Retrieve product by ID
     ProductDto getProductById(Long productId);

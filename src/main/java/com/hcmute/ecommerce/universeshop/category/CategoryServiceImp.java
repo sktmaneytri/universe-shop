@@ -7,12 +7,30 @@
     import lombok.AllArgsConstructor;
     import org.springframework.stereotype.Service;
 
+    import javax.annotation.PostConstruct;
     import java.util.List;
     @AllArgsConstructor
     @Service
     public class CategoryServiceImp implements CategoryService{
         private final ErrorMessage errorMessage;
         private final CategoryRepository categoryRepository;
+
+        public void initCategories() {
+            addCategory("ÁO PHÔNG", "aophong.jpg");
+            addCategory("ÁO SƠ MI", "aosomi.jpg");
+            addCategory("ÁO JACKET", "aoni.jpg");
+            addCategory("ÁO THUN", "aothun.jpg");
+            addCategory("ÁO HOODIE", "aohoodie.jpg");
+            addCategory("ÁO DÀI TAY", "aodaitay.jpg");
+        }
+        private void addCategory(String name, String image) {
+            CategoryEntity categoryEntity = CategoryEntity.builder()
+                    .name(name)
+                    .image(image)
+                    .build();
+            categoryRepository.save(categoryEntity);
+        }
+
         @Override
         public List<CategoryEntity> findAll() {
             return categoryRepository.findAll();

@@ -1,5 +1,8 @@
 package com.hcmute.ecommerce.universeshop.user;
 
+import com.hcmute.ecommerce.universeshop.base.exception.Constants;
+import com.hcmute.ecommerce.universeshop.base.exception.ErrorMessage;
+import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException;
 import com.hcmute.ecommerce.universeshop.role.RoleEntity;
 import com.hcmute.ecommerce.universeshop.role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +19,21 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ErrorMessage errorMessage;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, ErrorMessage errorMessage) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.errorMessage = errorMessage;
     }
 
     @Override
     public UserEntity registerNewUser(UserEntity user) {
+        if(userRepository.existsById(user.getUserName())) {
+            throw new InputValidationException(errorMessage.getMessage(Constants.USERNAME_EXISTED));
+        }
         // Find the role by role name
         Optional<RoleEntity> optionalRole = roleRepository.findById("USER");
 

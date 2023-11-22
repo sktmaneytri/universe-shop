@@ -1,5 +1,7 @@
 package com.hcmute.ecommerce.universeshop.product;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,4 +38,12 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     @Query("SELECT p FROM product p WHERE p.quantity < :quantityThreshold")
     List<ProductEntity> findProductsByQuantityBelowThreshold(@Param("quantityThreshold") int quantityThreshold);
+    @Override
+    Page<ProductEntity> findAll(Pageable pageable);
+    @Query("SELECT p FROM product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :key1, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :key2, '%'))")
+    List<ProductEntity> findProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(
+            @Param("key1") String key1,
+            @Param("key2") String key2,
+            Pageable pageable
+    );
 }
