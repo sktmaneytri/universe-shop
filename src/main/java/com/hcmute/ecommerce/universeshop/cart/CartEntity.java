@@ -23,11 +23,10 @@ public class CartEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<CartItemEntity> cartItem;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItemEntity> cartItem = new ArrayList<>();
     private Double totalPrices;
     private Integer totalItems;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     private UserEntity user;

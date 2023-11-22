@@ -4,8 +4,10 @@ import com.hcmute.ecommerce.universeshop.customer.CustomerEntity;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;
 
 public interface CartService {
-    CartEntity addItemToCart(ProductEntity productEntity, int quantity, String token);
+    CartEntity addItemToCart(ProductEntity productEntity, int quantity);
 
-    CartEntity updateItemInCart(ProductEntity productEntity, int quantity, String token);
-    CartEntity deleteItemInCart(ProductEntity productEntity, String token);
+    CartEntity getCartByUser();
+
+    CartEntity updateItemInCart(ProductEntity productEntity, int quantity);
+    CartEntity deleteItemInCart(ProductEntity productEntity);
 }
