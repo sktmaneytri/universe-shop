@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -21,6 +22,10 @@ public class UserEntity {
     private String userFirstName;
     private String userPassword;
     private String userLastName;
+    @NotNull
+    private Boolean activated;
+    @Column(name = "verification_code")
+    private String verificationCode;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLE",
     joinColumns = {
@@ -31,7 +36,7 @@ public class UserEntity {
             }
     )
     private Set<RoleEntity> roles;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JsonIgnore
     private CartEntity cart;
 }

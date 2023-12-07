@@ -40,7 +40,7 @@ public class ProductResource {
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "9") int limit,
-                                                           @RequestParam String searchKey) {
+                                                           @RequestParam(defaultValue = "") String searchKey) {
         PageRequest pageRequest = PageRequest.of(page, limit);
         List<ProductDto> products = productService.getAllProducts(pageRequest, searchKey);
         return ResponseEntity.ok(products);
@@ -93,16 +93,7 @@ public class ProductResource {
         }
     }
     public Set<ImageEntity> uploadImage(MultipartFile[] multipartFiles) throws IOException {
-        Set<ImageEntity> imageEntities = new HashSet<>();
-        for(MultipartFile file : multipartFiles) {
-            ImageEntity imageEntity = new ImageEntity(
-              file.getOriginalFilename(),
-                    file.getContentType(),
-                    file.getBytes()
-            );
-            imageEntities.add(imageEntity);
-        }
-        return imageEntities;
+        return null;
     }
 
     @PutMapping("/{productId}")

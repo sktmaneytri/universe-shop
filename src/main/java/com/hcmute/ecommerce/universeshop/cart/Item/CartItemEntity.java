@@ -24,7 +24,7 @@ public class CartItemEntity {
     @Min(value = 1)
     private int quantity;
     private double totalPrice;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id")
     @JsonIgnore
     private CartEntity cart;
@@ -36,12 +36,10 @@ public class CartItemEntity {
         CartItemEntity that = (CartItemEntity) o;
         return Objects.equals(id, that.id);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private ProductEntity product;

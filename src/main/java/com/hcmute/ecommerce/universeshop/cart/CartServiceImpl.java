@@ -8,7 +8,6 @@ import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException
 import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
 import com.hcmute.ecommerce.universeshop.cart.Item.CartItemEntity;
 import com.hcmute.ecommerce.universeshop.cart.Item.CartItemRepository;
-import com.hcmute.ecommerce.universeshop.customer.CustomerEntity;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;
 import com.hcmute.ecommerce.universeshop.user.UserEntity;
 import com.hcmute.ecommerce.universeshop.user.UserRepository;
@@ -142,12 +141,64 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartEntity updateItemInCart(ProductEntity productEntity, int quantity) {
-        return null;
+    public CartEntity updateItemInCart(Long productId, int quantity) {
+        String username = JwtRequestFilter.CURRENT_USER;
+        UserEntity user = userRepository.findById(username).orElseThrow(
+                () -> new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND))
+        );
+
+        CartEntity cart = user.getCart();
+        if (cart == null) {
+            throw new ResourceNotFoundException(errorMessage.getMessage(Constants.CART_NOT_FOUND));
+        }
+        List<CartItemEntity> cartItems = cart.getCartItem();
+        CartItemEntity cartItem = findCartItemEntity(cartItems, productId);
+
+        if (cartItem == null) {
+            throw new ResourceNotFoundException(errorMessage.getMessage(Constants.CART_ITEM_NOT_FOUND));
+        }
+        if (quantity == 0) {
+            cartItems.remove(cartItem);
+        } else {
+            cartItem.setQuantity(quantity);
+            cartItem.setTotalPrice(calculateTotalPrice(quantity, cartItem.getProduct().getActualPrice()));
+        }
+        // Update totalPrices and totalItems at the CartEntity level
+        cart.setTotalItems(calculateTotalItems(cartItems));
+        cart.setTotalPrices(calculateTotalPrice(cartItems));
+
+        cartRepository.save(cart);
+        user.setCart(cart);
+        userRepository.save(user);
+        return cart;
     }
 
     @Override
-    public CartEntity deleteItemInCart(ProductEntity productEntity) {
-        return null;
+    public CartEntity deleteItemInCart(Long productId) {
+        String username = JwtRequestFilter.CURRENT_USER;
+        UserEntity user = userRepository.findById(username).orElseThrow(
+                () -> new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND))
+        );
+
+        CartEntity cart = user.getCart();
+        if (cart == null) {
+            throw new ResourceNotFoundException(errorMessage.getMessage(Constants.CART_NOT_FOUND));
+        }
+
+        List<CartItemEntity> cartItems = cart.getCartItem();
+        CartItemEntity cartItem = findCartItemEntity(cartItems, productId);
+
+        if (cartItem == null) {
+            throw new ResourceNotFoundException(errorMessage.getMessage(Constants.CART_ITEM_NOT_FOUND));
+        }
+        cartItems.remove(cartItem);
+        // Update totalPrices and totalItems at the CartEntity level
+        cart.setTotalItems(calculateTotalItems(cartItems));
+        cart.setTotalPrices(calculateTotalPrice(cartItems));
+
+        cartRepository.save(cart);
+        user.setCart(cart);
+        userRepository.save(user);
+        return cart;
     }
 }

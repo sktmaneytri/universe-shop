@@ -1,9 +1,11 @@
 package com.hcmute.ecommerce.universeshop.cart;
 
+import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;
 import com.hcmute.ecommerce.universeshop.product.ProductRepository;
 import com.hcmute.ecommerce.universeshop.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,11 @@ public class CartResource {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to add item to cart: " + e.getMessage());
         }
+    }
+    @PutMapping("/updateItem")
+    public ResponseEntity<CartEntity> updateItemInCart(@RequestParam Long productId, @RequestParam(defaultValue = "0") int quantity) {
+            CartEntity updatedCart = cartService.updateItemInCart(productId, quantity);
+            return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
     @GetMapping("/user-cart")
     public ResponseEntity<CartEntity> getCartByUser() {

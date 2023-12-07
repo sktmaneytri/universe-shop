@@ -2,7 +2,6 @@ package com.hcmute.ecommerce.universeshop.cart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hcmute.ecommerce.universeshop.cart.Item.CartItemEntity;
-import com.hcmute.ecommerce.universeshop.customer.CustomerEntity;
 import com.hcmute.ecommerce.universeshop.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +26,7 @@ public class CartEntity {
     private List<CartItemEntity> cartItem = new ArrayList<>();
     private Double totalPrices;
     private Integer totalItems;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JsonIgnore
     private UserEntity user;
 

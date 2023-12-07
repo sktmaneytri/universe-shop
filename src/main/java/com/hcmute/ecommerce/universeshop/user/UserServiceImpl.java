@@ -1,20 +1,21 @@
 package com.hcmute.ecommerce.universeshop.user;
 
-import com.hcmute.ecommerce.universeshop.base.exception.Constants;
-import com.hcmute.ecommerce.universeshop.base.exception.ErrorMessage;
-import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException;
+import com.hcmute.ecommerce.universeshop.base.email.EmailService;
+import com.hcmute.ecommerce.universeshop.base.email.OTPService;
+import com.hcmute.ecommerce.universeshop.base.exception.*;
+import com.hcmute.ecommerce.universeshop.base.utils.EmailUtils;
 import com.hcmute.ecommerce.universeshop.role.RoleEntity;
 import com.hcmute.ecommerce.universeshop.role.RoleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import static com.hcmute.ecommerce.universeshop.base.utils.EmailUtils.isEmailValid;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
@@ -22,6 +23,12 @@ public class UserServiceImpl implements UserService{
     private final ErrorMessage errorMessage;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private OTPService opsService;
+    @Autowired
+    private EmailUtils emailUtils;
     @Autowired
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, ErrorMessage errorMessage) {
         this.userRepository = userRepository;
@@ -34,6 +41,12 @@ public class UserServiceImpl implements UserService{
         if(userRepository.existsById(user.getUserName())) {
             throw new InputValidationException(errorMessage.getMessage(Constants.USERNAME_EXISTED));
         }
+        if(Boolean.FALSE.equals(isEmailValid(user.getUserName()))) {
+            throw new InputValidationException(errorMessage.getMessage(Constants.USER_EMAIL_INVALID));
+        }
+        if(isExistingEmail(user.getUserName())) {
+            throw new InputValidationException(errorMessage.getMessage(Constants.USER_EMAIL_EXISTED));
+        }
         // Find the role by role name
         Optional<RoleEntity> optionalRole = roleRepository.findById("USER");
 
@@ -43,8 +56,14 @@ public class UserServiceImpl implements UserService{
             Set<RoleEntity> roles = new HashSet<>();
             roles.add(role);
             user.setRoles(roles);
+            user.setActivated(Boolean.FALSE);
+
 
             user.setUserPassword(getEncodedPassword(user.getUserPassword()));
+            //Generate the code
+            String OtpCode = opsService.generate(8);
+            user.setVerificationCode(OtpCode);
+            sendWelcomeEmail(user.getUserName(), "One-Time Password (OTP) - Expire in 5 minutes!", createEmailVariables(user, OtpCode));
             return userRepository.save(user);
         } else {
             // Handle the case when the role is not found
@@ -67,18 +86,20 @@ public class UserServiceImpl implements UserService{
         UserEntity adminUser = new UserEntity();
         adminUser.setUserFirstName("admin");
         adminUser.setUserLastName("admin");
-        adminUser.setUserName("admin123");
+        adminUser.setUserName("admin@gmail.com");
         adminUser.setUserPassword(getEncodedPassword("admin@pass"));
         Set<RoleEntity> adminRoles = new HashSet<>() ;
         adminRoles.add(adminRole);
         adminUser.setRoles(adminRoles);
+        adminUser.setActivated(Boolean.TRUE);
         userRepository.save(adminUser);
 
         UserEntity user = new UserEntity();
         user.setUserFirstName("tri");
-        user.setUserLastName("sharma");
-        user.setUserName("user123");
+        user.setUserLastName("nguyen");
+        user.setUserName("tri@gmail.com");
         user.setUserPassword(getEncodedPassword("user@pass"));
+        user.setActivated(Boolean.TRUE);
         Set<RoleEntity> userRoles = new HashSet<>() ;
         userRoles.add(userRole);
         user.setRoles(userRoles);
@@ -97,5 +118,42 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserEntity getUserByUserName(String userName) {
         return null;
+    }
+
+    @Override
+    public void verifyAndActivateUser(String email, String verificationCode) {
+        verificationCode = verificationCode.trim();
+        // Retrieve the user by email
+        UserEntity user = userRepository.findById(email).get();
+        if (user != null && user.getActivated() != null && !user.getActivated()) {
+            if (verificationCode.equals(user.getVerificationCode())) {
+                // Activate the user
+                user.setActivated(true);
+                userRepository.save(user);
+            } else {
+                throw new InputValidationException(errorMessage.getMessage(errorMessage.getMessage(Constants.INVALID_OTP_CODE)));
+            }
+        } else {
+            throw new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND));
+        }
+    }
+
+    public Boolean isExistingEmail(String email) {
+        return userRepository.existsById(email);
+    }
+    private Map<String, Object> createEmailVariables(UserEntity user, String OTPCode) {
+        // Add any necessary variables for the email content
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("otpCode", OTPCode);
+        variables.put("fullName", "Buddies");
+        return variables;
+    }
+    private void sendWelcomeEmail(String email, String subject, Map<String, Object> variables) {
+        try {
+            emailService.sendEmail(email, variables, subject);
+        } catch (Exception e) {
+            log.error("Error sending welcome email to " + email, e);
+            throw new SystemException(errorMessage.getMessage(Constants.SEND_EMAIL_ERROR));
+        }
     }
 }

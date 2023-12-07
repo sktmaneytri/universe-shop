@@ -8,4 +8,5 @@ public interface UserService {
     void initRolesAndUser();
     List<UserEntity> getUserEntities();
     UserEntity getUserByUserName(String userName);
+    void verifyAndActivateUser(String email, String verificationCode);
 }

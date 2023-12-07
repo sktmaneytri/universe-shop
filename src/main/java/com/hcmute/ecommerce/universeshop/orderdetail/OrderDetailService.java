@@ -38,13 +38,11 @@ public class OrderDetailService {
                     .orderFullName(orderInput.getFullName())
                     .orderFullAddress(orderInput.getFullAddress())
                     .orderContactNumber(orderInput.getContactNumber())
-                    .orderAlternateContactNumber(orderInput.getAlternateContactNumber())
                     .orderStatus(ORDER_PLACED)
                     .orderAmount(product.getActualPrice() * o.getQuantity())
                     .product(product)
                     .user(user)
                     .build();
-
             // Now, you can save or process the orderDetail as needed
             orderDetailRepository.save(orderDetail);
         }

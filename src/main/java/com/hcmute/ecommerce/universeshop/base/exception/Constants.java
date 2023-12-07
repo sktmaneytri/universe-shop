@@ -26,12 +26,23 @@ public class Constants {
     // System exception
     public static final String CONTENT_IS_BLANK = "exception.system.content-is-blank";
     public static final String CONTENT_MUST_NOT_BE_NULL = "exception.system.content-must-not-be-null";
+    public static final String INVALID_OTP_CODE = "exception.security.invalid-otp-code";
+    public static final String ALREADY_SENT_OTP_CODE = "exception.security.already-sent-opt-code";
+    public static final String SEND_EMAIL_ERROR = "exception.security.email-can-not-send";
 
 //    public static final String TOKEN_IS_INVALID = "Invalid token!";
 //    public static final String USERNAME_IS_INVALID = "Invalid username!";
  public static final String PRODUCT_NAME_EXISTED = "exception.security.product-name-existed";
     public static final String CATEGORY_NOT_FOUND = "exception.security.category-not-found";
     public static final String CART_NOT_FOUND = "exception.security.cart-not-found";
+    public static final String CART_ITEM_NOT_FOUND = "exception.security.cart-item-not-found";
     public static final String CATEGORY_NAME_EXISTED = "exception.security.category-name-existed";
+    public static final String USER_IS_DISABLED = "exception.security.disabled-user";
+    public static final String EMAIL_PASSWORD_INVALID = "exception.security.invalid-password-email";
+    public static final String TOKEN_EXPIRED = "exception.security.token-expired";
+    public static final String TOKEN_CAN_NOT_GENERATE = "exception.security.token-can-not-generate";
+    public static final String TOKEN_NOT_START_WITH_BEARER = "exception.security.token-not-start-with-bearer";
+    public static final String TOKEN_CAN_NOT_GET = "exception.security.token-can-not-get";
+    public static final String NOT_PERMITTED = "exception.security.not-permitted";
 
 }

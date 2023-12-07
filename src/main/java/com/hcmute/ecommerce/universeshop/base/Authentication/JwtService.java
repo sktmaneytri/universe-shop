@@ -1,5 +1,9 @@
 package com.hcmute.ecommerce.universeshop.base.Authentication;
 
+import com.hcmute.ecommerce.universeshop.base.exception.AuthorizationException;
+import com.hcmute.ecommerce.universeshop.base.exception.Constants;
+import com.hcmute.ecommerce.universeshop.base.exception.ErrorMessage;
+import com.hcmute.ecommerce.universeshop.base.exception.SystemException;
 import com.hcmute.ecommerce.universeshop.user.UserEntity;
 import com.hcmute.ecommerce.universeshop.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -24,38 +29,41 @@ public class JwtService implements UserDetailsService {
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
+    private ErrorMessage errorMessage;
+    @Autowired
     private AuthenticationManager authenticationManager;
 
-//    @Autowired
-//    public JwtService(UserRepository userRepository, JwtUtils jwtUtils, AuthenticationManager authenticationManager) {
-//        this.userRepository = userRepository;
-//        this.jwtUtils = jwtUtils;
-//        this.authenticationManager = authenticationManager;
-//    }
 
-    public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
-        String userName = jwtRequest.getUserName();
-        String userPassword = jwtRequest.getUserPassword();
-        authenticate(userName, userPassword);
+    public JwtResponse createJwtToken(JwtRequest jwtRequest) throws SystemException, AuthorizationException {
+        try {
+            String userName = jwtRequest.getUserName();
+            String userPassword = jwtRequest.getUserPassword();
+            authenticate(userName, userPassword);
 
-        final UserDetails userDetails = loadUserByUsername(userName);
-        String newGeneratedToken = jwtUtils.generateToken(userDetails);
+            final UserDetails userDetails = loadUserByUsername(userName);
+            String newGeneratedToken = jwtUtils.generateToken(userDetails);
 
-        UserEntity user = userRepository.findById(userName).get();
-        return new JwtResponse(user, newGeneratedToken);
+            UserEntity user = userRepository.findById(userName).get();
+            return new JwtResponse(user, newGeneratedToken);
+        }catch (SystemException e) {
+            throw new SystemException(errorMessage.getMessage(Constants.TOKEN_CAN_NOT_GENERATE));
+        }catch (AuthorizationException e) {
+            throw new SystemException(errorMessage.getMessage(Constants.NOT_PERMITTED));
+        }
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findById(username).get();
+        Optional<UserEntity> userOptional = userRepository.findById(username);
 
-        if(user != null) {
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
             return new User(
                     user.getUserName(),
                     user.getUserPassword(),
                     getAuthorities(user)
             );
         } else {
-            throw new UsernameNotFoundException("Username is not valid!");
+            throw new UsernameNotFoundException("User not found for username: " + username);
         }
     }
 
@@ -67,13 +75,17 @@ public class JwtService implements UserDetailsService {
                 });
         return authorities;
     }
-    private void authenticate(String userName, String userPassword) throws Exception {
+    private void authenticate(String userName, String userPassword) throws AuthorizationException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, userPassword));
+            UserEntity userEntity = userRepository.findById(userName).get();
+            if(userEntity.getActivated() == false) {
+                throw new AuthorizationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
+            }
         } catch (DisabledException e) {
-            throw new Exception("User is disabled!");
+            throw new AuthorizationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
         } catch (BadCredentialsException e) {
-            throw new Exception("Bad credentials from user!");
+            throw new AuthorizationException(errorMessage.getMessage(Constants.EMAIL_PASSWORD_INVALID));
         }
     }
 }

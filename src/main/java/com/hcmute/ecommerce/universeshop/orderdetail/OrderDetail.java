@@ -21,7 +21,6 @@ public class OrderDetail {
     private String orderFullName;
     private String orderFullAddress;
     private String orderContactNumber;
-    private String orderAlternateContactNumber;
     private String orderStatus;
     private Double orderAmount;
     @OneToOne
