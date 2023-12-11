@@ -22,6 +22,9 @@ public class UserEntity {
     private String userFirstName;
     private String userPassword;
     private String userLastName;
+    private String address;
+    @Column(name = "contact_number")
+    private String contactNumber;
     @NotNull
     private Boolean activated;
     @Column(name = "verification_code")

@@ -1,20 +1,23 @@
 package com.hcmute.ecommerce.universeshop.product;
 
+import com.hcmute.ecommerce.universeshop.base.utils.FirebaseUtils;
 import com.hcmute.ecommerce.universeshop.category.CategoryEntity;
 import com.hcmute.ecommerce.universeshop.category.CategoryRepository;
 import com.hcmute.ecommerce.universeshop.base.exception.Constants;
 import com.hcmute.ecommerce.universeshop.base.exception.ErrorMessage;
 import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException;
 import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
+import com.hcmute.ecommerce.universeshop.image.ImageEntity;
+import com.hcmute.ecommerce.universeshop.image.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
+
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService{
@@ -22,17 +25,37 @@ public class ProductServiceImpl implements ProductService{
     private final ProductMapper productMapper;
     private final ErrorMessage errorMessage;
     private final CategoryRepository categoryRepository;
+    private final FirebaseUtils firebaseUtils;
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, ErrorMessage errorMessage, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, ErrorMessage errorMessage, CategoryRepository categoryRepository, FirebaseUtils firebaseUtils) {
         this.productRepository = productRepository;
         this.productMapper  = productMapper;
         this.errorMessage = errorMessage;
         this.categoryRepository = categoryRepository;
+        this.firebaseUtils = firebaseUtils;
     }
 
     @Override
     public void initProducts() {
+        ImageEntity imageEntity1 = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/February2022/din3-(2)_copy.jpg")
+                .build();
+        ImageEntity imageEntity2 = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/November2021/12q2_25_4.jpg")
+                .build();
+        ImageEntity imageEntity3 = ImageEntity.builder()
+                .link("https://product.hstatic.net/200000305177/product/sp32_4e13d3429c8c4923b4fdc7e4269d7678_master.jpg")
+                .build();
+        ImageEntity imageEntity4 = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/September2022/5_24.jpg")
+                .build();
+        List<ImageEntity> images1 = Arrays.asList(imageEntity1, imageEntity2, imageEntity3, imageEntity4);
+        imageRepository.saveAll(images1);
+        Set<ImageEntity> images2 = Set.of(imageEntity1, imageEntity2, imageEntity3, imageEntity4);
+
         ProductEntity product1 = ProductEntity.builder()
                 .productName("UNIVERSE Spooky Tee")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
@@ -40,6 +63,7 @@ public class ProductServiceImpl implements ProductService{
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
+                .productImages(images2)
                 .category(categoryRepository.findById(1L).get())
                 .status(ProductStatus.AVAILABLE)
                 .build();
@@ -50,6 +74,7 @@ public class ProductServiceImpl implements ProductService{
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
+                .productImages(images2)
                 .category(categoryRepository.findById(1L).get())
                 .status(ProductStatus.AVAILABLE)
                 .build();
@@ -58,6 +83,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(600000))
                 .discountedPrice(Double.valueOf(0))
+                .productImages(images2)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(1L).get())
@@ -68,6 +94,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(100000))
                 .discountedPrice(Double.valueOf(0))
+                .productImages(images2)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(1L).get())
@@ -78,6 +105,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(250000))
                 .discountedPrice(Double.valueOf(0))
+                .productImages(images2)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(3L).get())
@@ -88,6 +116,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(203000))
                 .discountedPrice(Double.valueOf(0))
+                .productImages(images2)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(3L).get())
@@ -98,6 +127,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(230000))
                 .discountedPrice(Double.valueOf(0))
+                .productImages(images2)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(5L).get())
@@ -107,6 +137,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName("UNIVERSE Jadon Hoodie")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(400000))
+                .productImages(images2)
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
@@ -118,6 +149,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(240000))
                 .discountedPrice(Double.valueOf(0))
+                .productImages(images2)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(2L).get())
@@ -127,6 +159,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName("UNIVERSE Msson Somi")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(202000))
+                .productImages(images2)
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
@@ -218,6 +251,22 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    public ProductDto setImageProduct(List<MultipartFile> files, Long productId) throws IOException {
+        ProductEntity productEntity = productRepository.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException(errorMessage.getMessage(Constants.PRODUCT_NOT_FOUND))
+        );
+        for(MultipartFile file : files) {
+            ImageEntity imageEntity = new ImageEntity();
+            String imageAddress = firebaseUtils.uploadImage(file, file.getName());
+            imageEntity.setLink(imageAddress);
+            imageRepository.save(imageEntity);
+            productEntity.getProductImages().add(imageEntity);
+            productRepository.save(productEntity);
+        }
+        return productMapper.entityToDto(productEntity);
+    }
+
+    @Override
     public ProductDto updateProduct(Long productId,ProductEntity productEntity) {
        ProductEntity productEntityUpdated = productRepository.findById(productId)
                .orElseThrow(() -> new InputValidationException(errorMessage.getMessage(Constants.PRODUCT_NOT_FOUND)));
@@ -225,7 +274,6 @@ public class ProductServiceImpl implements ProductService{
            throw new InputValidationException(errorMessage.getMessage(Constants.PRODUCT_NAME_EXISTED));
        }
        productEntityUpdated.setProductName(productEntity.getProductName());
-//       productEntityUpdated.setImage(productEntityUpdated.getImage());
        productEntityUpdated.setCategory(productEntity.getCategory());
        productEntityUpdated.setActualPrice(productEntity.getActualPrice());
        productEntityUpdated.setDiscountedPrice(productEntity.getActualPrice());

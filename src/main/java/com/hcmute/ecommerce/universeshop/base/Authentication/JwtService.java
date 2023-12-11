@@ -1,9 +1,6 @@
 package com.hcmute.ecommerce.universeshop.base.Authentication;
 
-import com.hcmute.ecommerce.universeshop.base.exception.AuthorizationException;
-import com.hcmute.ecommerce.universeshop.base.exception.Constants;
-import com.hcmute.ecommerce.universeshop.base.exception.ErrorMessage;
-import com.hcmute.ecommerce.universeshop.base.exception.SystemException;
+import com.hcmute.ecommerce.universeshop.base.exception.*;
 import com.hcmute.ecommerce.universeshop.user.UserEntity;
 import com.hcmute.ecommerce.universeshop.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,17 +72,17 @@ public class JwtService implements UserDetailsService {
                 });
         return authorities;
     }
-    private void authenticate(String userName, String userPassword) throws AuthorizationException {
+    private void authenticate(String userName, String userPassword) throws AuthenticationException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, userPassword));
             UserEntity userEntity = userRepository.findById(userName).get();
             if(userEntity.getActivated() == false) {
-                throw new AuthorizationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
+                throw new AuthenticationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
             }
         } catch (DisabledException e) {
-            throw new AuthorizationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
+            throw new AuthenticationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
         } catch (BadCredentialsException e) {
-            throw new AuthorizationException(errorMessage.getMessage(Constants.EMAIL_PASSWORD_INVALID));
+            throw new AuthenticationException(errorMessage.getMessage(Constants.EMAIL_PASSWORD_INVALID));
         }
     }
 }

@@ -29,5 +29,4 @@ public class CartEntity {
     @OneToOne()
     @JsonIgnore
     private UserEntity user;
-
 }

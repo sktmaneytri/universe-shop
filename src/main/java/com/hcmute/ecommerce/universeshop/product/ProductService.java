@@ -1,7 +1,9 @@
 package com.hcmute.ecommerce.universeshop.product;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
@@ -29,6 +31,7 @@ public interface ProductService {
 
     // Create a new product
     ProductEntity createProduct(ProductEntity productEntity);
+    ProductDto setImageProduct(List<MultipartFile> files, Long productId) throws IOException;
 
     // Update an existing product
     ProductDto updateProduct(Long productId, ProductEntity productEntity);

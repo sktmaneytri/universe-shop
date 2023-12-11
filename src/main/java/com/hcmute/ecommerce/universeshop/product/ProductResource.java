@@ -64,6 +64,12 @@ public class ProductResource {
         return ResponseEntity.ok(products);
     }
 
+    @PostMapping("/{id}/set-images")
+    public ResponseEntity<ProductDto> setImages(@PathVariable Long id , @RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
+        ProductDto product = productService.setImageProduct(multipartFiles, id);
+        return ResponseEntity.ok(product);
+    }
+
     @GetMapping("/sold-out")
     public ResponseEntity<List<ProductDto>> getSoldOutProducts() {
         List<ProductDto> products = productService.getSoldOutProducts();
@@ -76,24 +82,11 @@ public class ProductResource {
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ProductEntity> createProduct(@RequestPart("product") ProductEntity productEntity,
-                                                       @RequestPart("imageFile")MultipartFile[] files) {
-
-        try {
-            Set<ImageEntity> images = uploadImage(files);
-            productEntity.setProductImages(images);
-
+    @PostMapping()
+    public ResponseEntity<ProductEntity> createProduct(@RequestPart("product") ProductEntity productEntity) {
             ProductEntity createdProduct = productService.createProduct(productEntity);
             URI uri = URI.create("/api/v1/products/" + createdProduct.getId());
             return ResponseEntity.created(uri).body(createdProduct);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-    public Set<ImageEntity> uploadImage(MultipartFile[] multipartFiles) throws IOException {
-        return null;
     }
 
     @PutMapping("/{productId}")

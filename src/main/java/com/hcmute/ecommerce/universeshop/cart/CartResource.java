@@ -39,12 +39,12 @@ public class CartResource {
             return ResponseEntity.badRequest().body("Failed to add item to cart: " + e.getMessage());
         }
     }
-    @PutMapping("/updateItem")
+    @PutMapping("/update-item")
     public ResponseEntity<CartEntity> updateItemInCart(@RequestParam Long productId, @RequestParam(defaultValue = "0") int quantity) {
             CartEntity updatedCart = cartService.updateItemInCart(productId, quantity);
             return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
-    @GetMapping("/user-cart")
+    @GetMapping("/view-cart")
     public ResponseEntity<CartEntity> getCartByUser() {
         return ResponseEntity.ok(cartService.getCartByUser());
     }

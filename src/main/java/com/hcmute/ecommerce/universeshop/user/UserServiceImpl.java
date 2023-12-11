@@ -77,6 +77,10 @@ public class UserServiceImpl implements UserService{
         adminRole.setRoleName("ADMIN");
         adminRole.setRoleDescription("ADMIN ROLE");
         roleRepository.save(adminRole);
+        RoleEntity sellerRole = new RoleEntity();
+        sellerRole.setRoleName("SELLER");
+        sellerRole.setRoleDescription("SELLER ROLE");
+        roleRepository.save(sellerRole);
 
         RoleEntity userRole = new RoleEntity();
         userRole.setRoleName("USER");
@@ -94,10 +98,25 @@ public class UserServiceImpl implements UserService{
         adminUser.setActivated(Boolean.TRUE);
         userRepository.save(adminUser);
 
+        UserEntity seller = new UserEntity();
+        seller.setUserFirstName("David");
+        seller.setUserLastName("Tran");
+        seller.setUserName("seller@gmail.com");
+        seller.setAddress("Ha Noi");
+        seller.setContactNumber("038 294 3017");
+        seller.setUserPassword(getEncodedPassword("seller@pass"));
+        seller.setActivated(Boolean.TRUE);
+        Set<RoleEntity> sellerRoles = new HashSet<>() ;
+        sellerRoles.add(sellerRole);
+        seller.setRoles(sellerRoles);
+        userRepository.save(seller);
+
         UserEntity user = new UserEntity();
         user.setUserFirstName("tri");
         user.setUserLastName("nguyen");
         user.setUserName("tri@gmail.com");
+        user.setAddress("Truong dai hoc SPKT - So 1 VVN - HCM");
+        user.setContactNumber("038 294 3017");
         user.setUserPassword(getEncodedPassword("user@pass"));
         user.setActivated(Boolean.TRUE);
         Set<RoleEntity> userRoles = new HashSet<>() ;

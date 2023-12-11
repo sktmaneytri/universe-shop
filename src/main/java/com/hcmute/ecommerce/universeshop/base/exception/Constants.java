@@ -45,4 +45,6 @@ public class Constants {
     public static final String TOKEN_CAN_NOT_GET = "exception.security.token-can-not-get";
     public static final String NOT_PERMITTED = "exception.security.not-permitted";
 
+    public static final String ORDER_NOT_FOUND = "exception.security.order-not-found";
+
 }
