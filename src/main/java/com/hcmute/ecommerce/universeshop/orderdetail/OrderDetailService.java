@@ -7,6 +7,8 @@ import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException
 import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
 import com.hcmute.ecommerce.universeshop.base.utils.Generator;
 import com.hcmute.ecommerce.universeshop.cart.CartEntity;
+import com.hcmute.ecommerce.universeshop.customproduct.CustomProductEntity;
+import com.hcmute.ecommerce.universeshop.customproduct.CustomProductRepository;
 import com.hcmute.ecommerce.universeshop.orderinput.OrderInput;
 import com.hcmute.ecommerce.universeshop.orderinput.OrderInputService;
 import com.hcmute.ecommerce.universeshop.product.ProductDto;
@@ -33,6 +35,8 @@ public class OrderDetailService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private CustomProductRepository customProductRepository;
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -45,7 +49,7 @@ public class OrderDetailService {
         List<OrderProductQuantity> productQuantityList = orderInput.getOrderProductQuantityList();
         Double orderAmountTotal = 0.0;
         for (OrderProductQuantity o : productQuantityList) {
-            ProductEntity product = productRepository.findById(o.getProductId()).orElseThrow(() -> new ResourceNotFoundException(errorMessage.getMessage(Constants.PRODUCT_NOT_FOUND)));
+            CustomProductEntity product = customProductRepository.findById(o.getCustomProductId()).orElseThrow(() -> new ResourceNotFoundException(errorMessage.getMessage(Constants.PRODUCT_NOT_FOUND)));
             String currentUser = JwtRequestFilter.CURRENT_USER;
             UserEntity user = userRepository.findById(currentUser).orElseThrow(() -> new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND)));
 
@@ -55,8 +59,8 @@ public class OrderDetailService {
                     .orderContactNumber(orderInput.getContactNumber())
                     .orderStatus(ORDER_PLACED)
                     .quantity(o.getQuantity())
-                    .orderAmount(product.getActualPrice() * o.getQuantity())
-                    .product(product)
+                    .orderAmount(product.getProductEntity().getActualPrice() * o.getQuantity())
+                    .customProductEntity(product)
                     .createdDate(LocalDateTime.now())
                     .user(user)
                     .build();

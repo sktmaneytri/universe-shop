@@ -1,5 +1,6 @@
     package com.hcmute.ecommerce.universeshop.orderdetail;
 
+    import com.hcmute.ecommerce.universeshop.customproduct.CustomProductEntity;
     import com.hcmute.ecommerce.universeshop.product.ProductEntity;
     import com.hcmute.ecommerce.universeshop.user.UserEntity;
     import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@
         private Double orderAmount;
         private LocalDateTime createdDate;
         @OneToOne
-        private ProductEntity product;
+        private CustomProductEntity customProductEntity;
         @OneToOne
         private UserEntity user;
     }

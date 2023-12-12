@@ -20,7 +20,7 @@ public class OrderInputService {
                     .stream()
                     .map(cartItem -> {
                         OrderProductQuantity orderProductQuantity = new OrderProductQuantity();
-                        orderProductQuantity.setProductId(cartItem.getProduct().getId());
+                        orderProductQuantity.setCustomProductId(cartItem.getCustomProduct().getId());
                         orderProductQuantity.setQuantity(cartItem.getQuantity());
                         return orderProductQuantity;
                     })

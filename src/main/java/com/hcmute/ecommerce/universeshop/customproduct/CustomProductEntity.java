@@ -1,11 +1,14 @@
 package com.hcmute.ecommerce.universeshop.customproduct;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hcmute.ecommerce.universeshop.category.CategoryEntity;
 import com.hcmute.ecommerce.universeshop.image.ImageEntity;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;
 import com.hcmute.ecommerce.universeshop.product.ProductStatus;
+import com.hcmute.ecommerce.universeshop.user.UserEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,25 +24,17 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CustomProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Size(min = 3, max = 30, message = "Product name size should be between 3-30")
-    @Column(name = "product_name")
-    private String productName;
-    @NotNull
-    @DecimalMin(value = "0.00")
-    @Column(name = "actual_price")
-    private Double actualPrice;
-    @NotNull
-    @DecimalMin(value = "0.00")
-    @Column(name = "discounted_price")
-    private Double discountedPrice;
-    @OneToMany
-    private List<ImageEntity> productImages;
-
+    @ManyToOne
+    @JsonIgnore
+    private UserEntity user;
     @ManyToOne
     private ProductEntity productEntity;
+    @Column(name = "custom_images")
+    @OneToMany
+    private List<ImageEntity> customImages;
 }

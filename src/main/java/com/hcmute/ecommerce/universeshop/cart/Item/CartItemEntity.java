@@ -2,6 +2,7 @@ package com.hcmute.ecommerce.universeshop.cart.Item;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hcmute.ecommerce.universeshop.cart.CartEntity;
+import com.hcmute.ecommerce.universeshop.customproduct.CustomProductEntity;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,6 @@ public class CartItemEntity {
         return Objects.hash(id);
     }
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
-    private ProductEntity product;
+    @JoinColumn(name = "custom_product_id")
+    private CustomProductEntity customProduct;
 }

@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService{
                 .build();
         List<ImageEntity> images1 = Arrays.asList(imageEntity1, imageEntity2, imageEntity3, imageEntity4);
         imageRepository.saveAll(images1);
-        Set<ImageEntity> images2 = Set.of(imageEntity1, imageEntity2, imageEntity3, imageEntity4);
+        Set<ImageEntity> images2 = Set.of(imageEntity1);
 
         ProductEntity product1 = ProductEntity.builder()
                 .productName("UNIVERSE Spooky Tee")

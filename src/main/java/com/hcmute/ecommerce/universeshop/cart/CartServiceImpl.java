@@ -8,6 +8,8 @@ import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException
 import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
 import com.hcmute.ecommerce.universeshop.cart.Item.CartItemEntity;
 import com.hcmute.ecommerce.universeshop.cart.Item.CartItemRepository;
+import com.hcmute.ecommerce.universeshop.customproduct.CustomProductEntity;
+import com.hcmute.ecommerce.universeshop.customproduct.CustomProductService;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;
 import com.hcmute.ecommerce.universeshop.user.UserEntity;
 import com.hcmute.ecommerce.universeshop.user.UserRepository;
@@ -34,6 +36,8 @@ public class CartServiceImpl implements CartService {
     private JwtUtils jwtUtils;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CustomProductService customProductService;
 
     @Autowired
     public CartServiceImpl(ErrorMessage errorMessage, CartRepository cartRepository, CartItemRepository cartItemRepository) {
@@ -41,12 +45,12 @@ public class CartServiceImpl implements CartService {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
     }
-    private CartItemEntity findCartItemEntity(List<CartItemEntity> cartItems, Long productId) {
+    private CartItemEntity findCartItemEntity(List<CartItemEntity> cartItems, Long customProductId) {
         if (cartItems == null) {
             return null;
         }
         return cartItems.stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
+                .filter(item -> item.getCustomProduct().getId().equals(customProductId))
                 .findFirst()
                 .orElse(null);
     }
@@ -64,7 +68,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartEntity addItemToCart(ProductEntity productEntity, int quantity) {
+    public CartEntity addItemToCart(CustomProductEntity customProduct, int quantity) {
         String username = JwtRequestFilter.CURRENT_USER;
         UserEntity user = userRepository.findById(username).orElseThrow(
                 () -> new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND))
@@ -80,18 +84,18 @@ public class CartServiceImpl implements CartService {
         }
 
         List<CartItemEntity> cartItems = cart.getCartItem();
-        CartItemEntity cartItem = findCartItemEntity(cartItems, productEntity.getId());
+        CartItemEntity cartItem = findCartItemEntity(cartItems, customProduct.getId());
 
         if (cartItem == null) {
             cartItem = new CartItemEntity();
-            cartItem.setProduct(productEntity);
+            cartItem.setCustomProduct(customProduct);
             cartItem.setQuantity(quantity);
-            cartItem.setTotalPrice(calculateTotalPrice(quantity, productEntity.getActualPrice()));
+            cartItem.setTotalPrice(calculateTotalPrice(quantity, customProduct.getProductEntity().getActualPrice()));
             cartItem.setCart(cart);
             cartItems.add(cartItem);
         } else {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
-            cartItem.setTotalPrice(calculateTotalPrice(cartItem.getQuantity(), productEntity.getActualPrice()));
+            cartItem.setTotalPrice(calculateTotalPrice(cartItem.getQuantity(), customProduct.getProductEntity().getActualPrice()));
         }
 
         // Update totalPrices and totalItems at the CartEntity level
@@ -123,7 +127,6 @@ public class CartServiceImpl implements CartService {
 
         return cart;
     }
-
     private double calculateTotalPrice(int quantity, double price) {
         if (quantity < 0 || price < 0) {
             throw new IllegalArgumentException("Quantity and price must be non-negative");
@@ -161,7 +164,7 @@ public class CartServiceImpl implements CartService {
             cartItems.remove(cartItem);
         } else {
             cartItem.setQuantity(quantity);
-            cartItem.setTotalPrice(calculateTotalPrice(quantity, cartItem.getProduct().getActualPrice()));
+            cartItem.setTotalPrice(calculateTotalPrice(quantity, cartItem.getCustomProduct().getProductEntity().getActualPrice()));
         }
         // Update totalPrices and totalItems at the CartEntity level
         cart.setTotalItems(calculateTotalItems(cartItems));
