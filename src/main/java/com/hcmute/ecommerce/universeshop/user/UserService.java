@@ -9,4 +9,8 @@ public interface UserService {
     List<UserEntity> getUserEntities();
     UserEntity getUserByUserName(String userName);
     void verifyAndActivateUser(String email, String verificationCode);
+
+    void deleteUser(String userName);
+    void reviveUser(String userName);
+    List<UserEntity> getUsersDelete();
 }

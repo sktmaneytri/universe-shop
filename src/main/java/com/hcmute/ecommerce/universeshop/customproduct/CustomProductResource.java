@@ -27,4 +27,10 @@ public class CustomProductResource {
         CustomProductEntity createdCustomProductEntity = customProductService.saveCustomProduct(proId, multipartFiles);
         return new ResponseEntity<>(createdCustomProductEntity, HttpStatus.CREATED);
     }
+
+    @GetMapping("/custom-products/{proId}")
+    public ResponseEntity<CustomProductEntity> getCustomProductByID(@PathVariable Long proId) {
+        CustomProductEntity createdCustomProductEntity = customProductService.findCustomProductById(proId);
+        return new ResponseEntity<>(createdCustomProductEntity, HttpStatus.OK);
+    }
 }

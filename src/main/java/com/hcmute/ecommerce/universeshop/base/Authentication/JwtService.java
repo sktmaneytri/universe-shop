@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -75,11 +76,13 @@ public class JwtService implements UserDetailsService {
     private void authenticate(String userName, String userPassword) throws AuthenticationException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, userPassword));
-            UserEntity userEntity = userRepository.findById(userName).get();
+            UserEntity userEntity = userRepository.getUserByUsername(userName).get();
             if(userEntity.getActivated() == false) {
                 throw new AuthenticationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
             }
         } catch (DisabledException e) {
+            throw new AuthenticationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
+        }catch (NoSuchElementException e) {
             throw new AuthenticationException(errorMessage.getMessage(Constants.USER_IS_DISABLED));
         } catch (BadCredentialsException e) {
             throw new AuthenticationException(errorMessage.getMessage(Constants.EMAIL_PASSWORD_INVALID));

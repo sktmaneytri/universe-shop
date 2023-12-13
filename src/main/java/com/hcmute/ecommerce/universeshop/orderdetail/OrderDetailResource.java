@@ -28,30 +28,30 @@ public class OrderDetailResource {
        return ResponseEntity.ok(orderPlaced);
     }
     @GetMapping({"/orders"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<List<OrderDetail>> viewAllOrderDetails() {
         List<OrderDetail> orderDetailEntities = orderDetailService.getAllOrders();
         return ResponseEntity.ok(orderDetailEntities);
     }
     @GetMapping({"/orders/{id}"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<OrderDetail> getOrderDetailById(@PathVariable Long id) {
        OrderDetail orderDetail = orderDetailService.findOrderDetailById(id);
         return ResponseEntity.ok(orderDetail);
     }
     @GetMapping({"/orders/status/"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<List<OrderDetail>> viewOrderDetailsByStatus(@RequestParam("status") String status) {
         List<OrderDetail> orderDetailEntities = orderDetailService.getOrdersByStatus(status);
         return ResponseEntity.ok(orderDetailEntities);
     }
     @GetMapping({"/orders/statistic"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<Statistic> viewOrderDetailsByStatus() {
         return ResponseEntity.ok(orderDetailService.viewStatistics());
     }
     @PostMapping({"/orders/{id}/shipped"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<OrderDetail> shippedOrder(@PathVariable Long id) {
         OrderDetail orderShipped = orderDetailService.checkoutOrder(id);
         return ResponseEntity.ok(orderShipped);
