@@ -4,6 +4,7 @@ import com.hcmute.ecommerce.universeshop.base.exception.InputValidationException
 import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class UserResource {
 //        userService.initRolesAndUser();
 //    }
     @GetMapping("/users")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserEntity> getAllUsers() {
        return userService.getUserEntities();
     }
@@ -57,5 +59,11 @@ public class UserResource {
             log.error("Error activating user: " + e.getMessage(), e);
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+    }
+    @DeleteMapping("/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<String> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
+        return new ResponseEntity<>("Delete successfully!", HttpStatus.NO_CONTENT);
     }
 }

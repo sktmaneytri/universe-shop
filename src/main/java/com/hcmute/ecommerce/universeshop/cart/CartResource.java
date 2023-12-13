@@ -52,8 +52,8 @@ public class CartResource {
     }
 
     @PutMapping("/update-item")
-    public ResponseEntity<CartEntity> updateItemInCart(@RequestParam Long productId, @RequestParam(defaultValue = "0") int quantity) {
-            CartEntity updatedCart = cartService.updateItemInCart(productId, quantity);
+    public ResponseEntity<CartEntity> updateItemInCart(@RequestParam Long customProductId, @RequestParam(defaultValue = "0") int quantity) {
+            CartEntity updatedCart = cartService.updateItemInCart(customProductId, quantity);
             return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
     @GetMapping("/view-cart")

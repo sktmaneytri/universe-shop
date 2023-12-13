@@ -65,6 +65,7 @@ public class OrderDetailService {
                     .user(user)
                     .build();
             orderAmountTotal += orderDetail.getOrderAmount();
+            orderDetail.setIsPaid(Boolean.TRUE);
             orderDetailRepository.save(orderDetail);
         }
         OrderDto orderDto = OrderDto.builder()

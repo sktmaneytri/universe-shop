@@ -24,6 +24,7 @@
         private String orderFullAddress;
         private String orderContactNumber;
         private String orderStatus;
+        private Boolean isPaid;
         private Integer quantity;
         private Double orderAmount;
         private LocalDateTime createdDate;

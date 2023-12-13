@@ -144,7 +144,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartEntity updateItemInCart(Long productId, int quantity) {
+    public CartEntity updateItemInCart(Long customProductId, int quantity) {
         String username = JwtRequestFilter.CURRENT_USER;
         UserEntity user = userRepository.findById(username).orElseThrow(
                 () -> new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND))
@@ -155,7 +155,7 @@ public class CartServiceImpl implements CartService {
             throw new ResourceNotFoundException(errorMessage.getMessage(Constants.CART_NOT_FOUND));
         }
         List<CartItemEntity> cartItems = cart.getCartItem();
-        CartItemEntity cartItem = findCartItemEntity(cartItems, productId);
+        CartItemEntity cartItem = findCartItemEntity(cartItems, customProductId);
 
         if (cartItem == null) {
             throw new ResourceNotFoundException(errorMessage.getMessage(Constants.CART_ITEM_NOT_FOUND));

@@ -38,14 +38,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserEntity registerNewUser(UserEntity user) {
-        if(userRepository.existsById(user.getUserName())) {
+        if(userRepository.getUserByUsername(user.getUserName()).isPresent()) {
             throw new InputValidationException(errorMessage.getMessage(Constants.USERNAME_EXISTED));
         }
         if(Boolean.FALSE.equals(isEmailValid(user.getUserName()))) {
             throw new InputValidationException(errorMessage.getMessage(Constants.USER_EMAIL_INVALID));
-        }
-        if(isExistingEmail(user.getUserName())) {
-            throw new InputValidationException(errorMessage.getMessage(Constants.USER_EMAIL_EXISTED));
         }
         // Find the role by role name
         Optional<RoleEntity> optionalRole = roleRepository.findById("USER");
@@ -63,6 +60,7 @@ public class UserServiceImpl implements UserService{
             //Generate the code
             String OtpCode = opsService.generate(8);
             user.setVerificationCode(OtpCode);
+            user.setIsDeleted(Boolean.FALSE);
             sendWelcomeEmail(user.getUserName(), "One-Time Password (OTP) - Expire in 5 minutes!", createEmailVariables(user, OtpCode));
             return userRepository.save(user);
         } else {
@@ -96,6 +94,7 @@ public class UserServiceImpl implements UserService{
         adminRoles.add(adminRole);
         adminUser.setRoles(adminRoles);
         adminUser.setActivated(Boolean.TRUE);
+        adminUser.setIsDeleted(Boolean.FALSE);
         userRepository.save(adminUser);
 
         UserEntity seller = new UserEntity();
@@ -109,6 +108,7 @@ public class UserServiceImpl implements UserService{
         Set<RoleEntity> sellerRoles = new HashSet<>() ;
         sellerRoles.add(sellerRole);
         seller.setRoles(sellerRoles);
+        seller.setIsDeleted(Boolean.FALSE);
         userRepository.save(seller);
 
         UserEntity user = new UserEntity();
@@ -121,6 +121,7 @@ public class UserServiceImpl implements UserService{
         user.setActivated(Boolean.TRUE);
         Set<RoleEntity> userRoles = new HashSet<>() ;
         userRoles.add(userRole);
+        user.setIsDeleted(Boolean.FALSE);
         user.setRoles(userRoles);
         userRepository.save(user);
     }
@@ -148,6 +149,7 @@ public class UserServiceImpl implements UserService{
             if (verificationCode.equals(user.getVerificationCode())) {
                 // Activate the user
                 user.setActivated(true);
+                user.setIsDeleted(Boolean.FALSE);
                 userRepository.save(user);
             } else {
                 throw new InputValidationException(errorMessage.getMessage(errorMessage.getMessage(Constants.INVALID_OTP_CODE)));
@@ -155,6 +157,31 @@ public class UserServiceImpl implements UserService{
         } else {
             throw new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND));
         }
+    }
+
+    @Override
+    public void deleteUser(String userName) {
+        UserEntity user = userRepository.findById(userName).orElseThrow(
+                () -> new InputValidationException(errorMessage.getMessage(Constants.USER_NOT_FOUND))
+        );
+        user.setIsDeleted(Boolean.TRUE);
+        user.setActivated(Boolean.FALSE);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void reviveUser(String userName) {
+        UserEntity user = userRepository.findById(userName).orElseThrow(
+                () -> new InputValidationException(errorMessage.getMessage(Constants.USER_NOT_FOUND))
+        );
+        user.setIsDeleted(Boolean.FALSE);
+        user.setActivated(Boolean.TRUE);
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<UserEntity> getUsersDelete() {
+        return userRepository.getDeletedUser();
     }
 
     public Boolean isExistingEmail(String email) {

@@ -27,6 +27,8 @@ public class UserEntity {
     private String contactNumber;
     @NotNull
     private Boolean activated;
+
+    private Boolean isDeleted;
     @Column(name = "verification_code")
     private String verificationCode;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

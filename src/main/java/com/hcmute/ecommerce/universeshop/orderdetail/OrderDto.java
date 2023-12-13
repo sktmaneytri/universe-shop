@@ -19,6 +19,8 @@ public class OrderDto {
     private String orderContactNumber;
     private String orderStatus;
     private Double orderAmount;
+
+    private Boolean isPaid;
     private LocalDateTime createdDate;
     private List<OrderProductQuantity> orderItems;
 }
