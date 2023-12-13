@@ -31,11 +31,11 @@ public class ProductResource {
         this.productService = productService;
         this.categoryService = categoryService;
     }
-    @PostConstruct
-    public void initCategoriesAndProducts() {
-        categoryService.initCategories();
-        productService.initProducts();
-    }
+//    @PostConstruct
+//    public void initCategoriesAndProducts() {
+//        categoryService.initCategories();
+//        productService.initProducts();
+//    }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam(defaultValue = "0") int page,

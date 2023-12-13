@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/products")
 public class CustomProductResource {
     @Autowired
     private CustomProductService customProductService;
@@ -27,4 +27,6 @@ public class CustomProductResource {
         CustomProductEntity createdCustomProductEntity = customProductService.saveCustomProduct(proId, multipartFiles);
         return new ResponseEntity<>(createdCustomProductEntity, HttpStatus.CREATED);
     }
+
+
 }

@@ -17,10 +17,10 @@ import java.util.List;
 public class UserResource {
     @Autowired
     private UserService userService;
-    @PostConstruct
-    public void initRolesAndUsers() {
-        userService.initRolesAndUser();
-    }
+//    @PostConstruct
+//    public void initRolesAndUsers() {
+//        userService.initRolesAndUser();
+//    }
     @GetMapping("/users")
     public List<UserEntity> getAllUsers() {
        return userService.getUserEntities();
