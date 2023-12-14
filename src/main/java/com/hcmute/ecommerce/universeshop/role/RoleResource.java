@@ -1,6 +1,8 @@
 package com.hcmute.ecommerce.universeshop.role;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +17,14 @@ public class RoleResource {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public RoleEntity createNewRole(@RequestBody RoleEntity roleEntity) {
-        return roleService.saveRole(roleEntity);
+    public ResponseEntity<RoleEntity> createNewRole(@RequestBody RoleEntity roleEntity) {
+        return new ResponseEntity<>(roleService.saveRole(roleEntity), HttpStatus.CREATED);
     }
 
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public List<RoleEntity> getAllRoles () {
-        return roleService.getRoleEntities();
+    public ResponseEntity<List<RoleEntity>> getAllRoles () {
+        return new ResponseEntity<>(roleService.getRoleEntities(), HttpStatus.OK);
     }
 
 }

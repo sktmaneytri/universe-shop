@@ -124,7 +124,6 @@ public class CartServiceImpl implements CartService {
         } else {
             log.info("No cart found for user");
         }
-
         return cart;
     }
     private double calculateTotalPrice(int quantity, double price) {
