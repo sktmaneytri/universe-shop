@@ -24,12 +24,13 @@ public class UserResource {
     }
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserEntity> getAllUsers() {
-       return userService.getUserEntities();
+    public ResponseEntity<List<UserEntity>> getAllUsers() {
+        return new ResponseEntity<>(userService.getUserEntities(), HttpStatus.OK);
     }
-
     @PostMapping({"/register"})
-    public UserEntity registerNewUser(@RequestBody UserEntity user) {return userService.registerNewUser(user);}
+    public ResponseEntity<UserEntity> registerNewUser(@RequestBody UserEntity user) {
+        return new ResponseEntity<>(userService.registerNewUser(user), HttpStatus.CREATED);
+    }
     @GetMapping({"/forAdmin"})
     @PreAuthorize("hasRole('ADMIN')")
     public String forAdmin() {
@@ -65,5 +66,10 @@ public class UserResource {
     public ResponseEntity<String> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return new ResponseEntity<>("Delete successfully!", HttpStatus.NO_CONTENT);
+    }
+    @PostMapping({"/{id}/revive"})
+    public ResponseEntity<String> reviveUser(@PathVariable String id) {
+        userService.reviveUser(id);
+        return new ResponseEntity<>("Reset user successfully!", HttpStatus.OK);
     }
 }
