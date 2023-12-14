@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CustomProductService {
 
-    CustomProductEntity saveCustomProduct(Long productId, List<MultipartFile> multipartFiles) throws IOException;
+    CustomProductEntity saveCustomProduct(Long productId, List<MultipartFile> multipartFiles, String size) throws IOException;
 
     CustomProductEntity findCustomProductById(Long customProductId);
 
