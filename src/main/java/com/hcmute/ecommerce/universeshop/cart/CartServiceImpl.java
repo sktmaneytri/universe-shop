@@ -9,7 +9,9 @@ import com.hcmute.ecommerce.universeshop.base.exception.ResourceNotFoundExceptio
 import com.hcmute.ecommerce.universeshop.cart.Item.CartItemEntity;
 import com.hcmute.ecommerce.universeshop.cart.Item.CartItemRepository;
 import com.hcmute.ecommerce.universeshop.customproduct.CustomProductEntity;
+import com.hcmute.ecommerce.universeshop.customproduct.CustomProductRepository;
 import com.hcmute.ecommerce.universeshop.customproduct.CustomProductService;
+import com.hcmute.ecommerce.universeshop.customproduct.SizeEnum;
 import com.hcmute.ecommerce.universeshop.product.ProductEntity;
 import com.hcmute.ecommerce.universeshop.user.UserEntity;
 import com.hcmute.ecommerce.universeshop.user.UserRepository;
@@ -37,7 +39,7 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private CustomProductService customProductService;
+    private CustomProductRepository customProductRepository;
 
     @Autowired
     public CartServiceImpl(ErrorMessage errorMessage, CartRepository cartRepository, CartItemRepository cartItemRepository) {
@@ -68,7 +70,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartEntity addItemToCart(CustomProductEntity customProduct, int quantity) {
+    public CartEntity addItemToCart(CustomProductEntity customProduct, int quantity, String size) {
         String username = JwtRequestFilter.CURRENT_USER;
         UserEntity user = userRepository.findById(username).orElseThrow(
                 () -> new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND))
@@ -105,6 +107,8 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
         user.setCart(cart);
         userRepository.save(user);
+        customProduct.setSize(SizeEnum.valueOf(size));
+        customProductRepository.save(customProduct);
         return cart;
     }
 

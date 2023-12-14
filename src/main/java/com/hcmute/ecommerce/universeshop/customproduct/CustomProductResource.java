@@ -23,8 +23,8 @@ public class CustomProductResource {
     private CustomProductService customProductService;
 
     @PostMapping("/{proId}/custom-products")
-    public ResponseEntity<CustomProductEntity> saveCustomProduct(@PathVariable Long proId, @RequestParam("size") String size , @RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
-        CustomProductEntity createdCustomProductEntity = customProductService.saveCustomProduct(proId, multipartFiles, size);
+    public ResponseEntity<CustomProductEntity> saveCustomProduct(@PathVariable Long proId, @RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
+        CustomProductEntity createdCustomProductEntity = customProductService.saveCustomProduct(proId, multipartFiles);
         return new ResponseEntity<>(createdCustomProductEntity, HttpStatus.CREATED);
     }
 

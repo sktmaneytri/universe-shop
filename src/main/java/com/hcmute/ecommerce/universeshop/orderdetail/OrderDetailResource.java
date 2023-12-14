@@ -34,7 +34,7 @@ public class OrderDetailResource {
         return ResponseEntity.ok(orderDetailEntities);
     }
     @GetMapping({"/orders/{id}"})
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasAnyRole('USER', 'SELLER')")
     public ResponseEntity<OrderDetail> getOrderDetailById(@PathVariable Long id) {
        OrderDetail orderDetail = orderDetailService.findOrderDetailById(id);
         return ResponseEntity.ok(orderDetail);
