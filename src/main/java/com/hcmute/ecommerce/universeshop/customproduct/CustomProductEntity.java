@@ -37,4 +37,6 @@ public class CustomProductEntity {
     @Column(name = "custom_images")
     @OneToMany
     private List<ImageEntity> customImages;
+    @Column(name = "size")
+    private SizeEnum size;
 }

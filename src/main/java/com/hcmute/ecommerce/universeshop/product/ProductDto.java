@@ -24,7 +24,6 @@ public class ProductDto {
     @NotNull
     @DecimalMin(value = "0.00")
     private Double actualPrice;
-
     @NotNull
     @DecimalMin(value = "0.00")
     private Double discountedPrice;

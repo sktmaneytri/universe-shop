@@ -40,50 +40,59 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void initProducts() {
-        ImageEntity imageEntity1 = ImageEntity.builder()
-                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/February2022/din3-(2)_copy.jpg")
+        ImageEntity frontBlueTShirt = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/November2022/recycle-tee-nhan-ep-navy_41.jpg")
                 .build();
-        ImageEntity imageEntity2 = ImageEntity.builder()
-                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/November2021/12q2_25_4.jpg")
+        ImageEntity backBlueTShirt = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/April2022/canvainavy_4.jpg")
                 .build();
-        ImageEntity imageEntity3 = ImageEntity.builder()
-                .link("https://product.hstatic.net/200000305177/product/sp32_4e13d3429c8c4923b4fdc7e4269d7678_master.jpg")
+        ImageEntity frontBlackTShirt = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=100/uploads/November2022/recycle-tee-nhan-ep-den_39.jpg")
                 .build();
-        ImageEntity imageEntity4 = ImageEntity.builder()
-                .link("https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/September2022/5_24.jpg")
+        ImageEntity backBlackTShirt = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=100/uploads/April2022/canvaiden_4.jpg")
                 .build();
-        List<ImageEntity> images1 = Arrays.asList(imageEntity1, imageEntity2, imageEntity3, imageEntity4);
-        imageRepository.saveAll(images1);
-        Set<ImageEntity> images2 = Set.of(imageEntity1);
+        ImageEntity frontGreyTShirt = ImageEntity.builder()
+                .link("https://media2.coolmate.me/cdn-cgi/image/quality=100/uploads/September2023/AT220.XAM2.jpg")
+                .build();
+        ImageEntity backGreyTShirt = ImageEntity.builder()
+                .link("https://www.coolmate.me/product/ao-thun-100-cotton-220gsm?color=xam-melange#")
+                .build();
+        Set<ImageEntity> blue = Set.of(frontBlueTShirt, backBlueTShirt);
+        Set<ImageEntity> black = Set.of(frontBlackTShirt, backBlackTShirt);
+        Set<ImageEntity> grey = Set.of(frontGreyTShirt, backGreyTShirt);
+        imageRepository.saveAll(blue);
+        imageRepository.saveAll(black);
+        imageRepository.saveAll(grey);
 
         ProductEntity product1 = ProductEntity.builder()
-                .productName("UNIVERSE Spooky Tee")
+                .productName("UNIVERSE Spooky Blue Tee")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(200000))
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
-                .productImages(images2)
+                .productImages(blue)
                 .category(categoryRepository.findById(1L).get())
                 .status(ProductStatus.AVAILABLE)
                 .build();
         ProductEntity product2 = ProductEntity.builder()
-                .productName("UNIVERSE Book Boxy Tee")
+                .productName("UNIVERSE Book Boxy Black Tee")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(400000))
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
-                .productImages(images2)
+                .productImages( black)
                 .category(categoryRepository.findById(1L).get())
                 .status(ProductStatus.AVAILABLE)
                 .build();
         ProductEntity product3 = ProductEntity.builder()
-                .productName("UNIVERSE Season 3 Tee")
+                .productName("UNIVERSE Season Grey 3 Tee")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(600000))
                 .discountedPrice(Double.valueOf(0))
-                .productImages(images2)
+                .productImages(grey)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(1L).get())
@@ -94,7 +103,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(100000))
                 .discountedPrice(Double.valueOf(0))
-                .productImages(images2)
+                .productImages(black)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(1L).get())
@@ -105,7 +114,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(250000))
                 .discountedPrice(Double.valueOf(0))
-                .productImages(images2)
+                .productImages(grey)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(3L).get())
@@ -116,7 +125,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(203000))
                 .discountedPrice(Double.valueOf(0))
-                .productImages(images2)
+                .productImages(blue)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(3L).get())
@@ -127,7 +136,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(230000))
                 .discountedPrice(Double.valueOf(0))
-                .productImages(images2)
+                .productImages(black)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(5L).get())
@@ -137,7 +146,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName("UNIVERSE Jadon Hoodie")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(400000))
-                .productImages(images2)
+                .productImages(black)
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
@@ -149,7 +158,7 @@ public class ProductServiceImpl implements ProductService{
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(240000))
                 .discountedPrice(Double.valueOf(0))
-                .productImages(images2)
+                .productImages(grey)
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
                 .category(categoryRepository.findById(2L).get())
@@ -159,7 +168,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName("UNIVERSE Msson Somi")
                 .description("ÁO UNIVERSE TEE ĐƯỢC LÀM TỪ COTTON 100% CHỐNG NHĂN CHỐNG PHAI MÀU, ĐẢM BẢO SỨC KHỎE NGƯỜI DÙNG")
                 .actualPrice(Double.valueOf(202000))
-                .productImages(images2)
+                .productImages(grey)
                 .discountedPrice(Double.valueOf(0))
                 .quantity(1000)
                 .manufacturer("UNIVERSE FACTORY")
@@ -174,7 +183,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<ProductDto> getAllProducts(Pageable pageable, String searchKey) {
         if(searchKey.equals("")) {
-            List<ProductEntity> productEntities = productRepository.findAll(pageable).getContent();
+            List<ProductEntity> productEntities = productRepository.findAll();
             List<ProductDto> productDtoList = productMapper.entitiesToDtos(productEntities);
             if(productDtoList.isEmpty()) {
                 return productDtoList;

@@ -50,6 +50,7 @@ public class OrderDetailService {
         Double orderAmountTotal = 0.0;
         for (OrderProductQuantity o : productQuantityList) {
             CustomProductEntity product = customProductRepository.findById(o.getCustomProductId()).orElseThrow(() -> new ResourceNotFoundException(errorMessage.getMessage(Constants.PRODUCT_NOT_FOUND)));
+            ProductEntity productEntity = product.getProductEntity();
             String currentUser = JwtRequestFilter.CURRENT_USER;
             UserEntity user = userRepository.findById(currentUser).orElseThrow(() -> new ResourceNotFoundException(errorMessage.getMessage(Constants.USER_NOT_FOUND)));
 
@@ -67,6 +68,8 @@ public class OrderDetailService {
             orderAmountTotal += orderDetail.getOrderAmount();
             orderDetail.setIsPaid(Boolean.TRUE);
             orderDetailRepository.save(orderDetail);
+            productEntity.setQuantity(productEntity.getQuantity() - o.getQuantity());
+            productRepository.save(productEntity);
         }
         OrderDto orderDto = OrderDto.builder()
                 .orderFullName(orderInput.getFullName())
