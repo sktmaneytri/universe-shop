@@ -57,7 +57,7 @@ public class CustomProductServiceImpl implements CustomProductService {
     }
 
     @Override
-    public CustomProductEntity saveCustomProduct(Long productId, List<MultipartFile> multipartFiles, String size) throws IOException {
+    public CustomProductEntity saveCustomProduct(Long productId, List<MultipartFile> multipartFiles) throws IOException {
         ProductEntity productEntity = productRepository.findById(productId).orElseThrow(
                 () -> new InputValidationException(errorMessage.getMessage(Constants.PRODUCT_NOT_FOUND))
         );
@@ -66,7 +66,6 @@ public class CustomProductServiceImpl implements CustomProductService {
         CustomProductEntity customProductEntity = new CustomProductEntity();
         customProductEntity.setProductEntity(productEntity);
         customProductEntity.setUser(user);
-        customProductEntity.setSize(SizeEnum.valueOf(size));
         customProductEntity.setCustomImages(new ArrayList<>());
         for(MultipartFile file : multipartFiles) {
             ImageEntity imageEntity = new ImageEntity();

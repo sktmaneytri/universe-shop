@@ -43,7 +43,7 @@ public class CartResource {
             }
 
             // Call the service method to add the item to the cart
-            CartEntity updatedCart = cartService.addItemToCart(customProductEntity, quantity);
+            CartEntity updatedCart = cartService.addItemToCart(customProductEntity, quantity, addToCartRequest.getSize());
 
             return ResponseEntity.ok("Item added to cart successfully");
         } catch (Exception e) {
