@@ -18,10 +18,10 @@ import java.util.List;
 public class UserResource {
     @Autowired
     private UserService userService;
-    @PostConstruct
-    public void initRolesAndUsers() {
-        userService.initRolesAndUser();
-    }
+//    @PostConstruct
+//    public void initRolesAndUsers() {
+//        userService.initRolesAndUser();
+//    }
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserEntity>> getAllUsers() {
