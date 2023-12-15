@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService{
             user.setRoles(roles);
             user.setActivated(Boolean.FALSE);
 
-
             user.setUserPassword(getEncodedPassword(user.getUserPassword()));
             //Generate the code
             String OtpCode = opsService.generate(8);
